@@ -141,10 +141,10 @@
       gap: 10px;
     }
 
-    .form-row-3 {
+    .form-row-2 {
       display: grid;
-      grid-template-columns: 1fr 1fr 1.2fr;
-      gap: 8px;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
     }
 
     label {
@@ -176,6 +176,20 @@
       outline: none;
       border-color: var(--primary);
       box-shadow: 0 0 0 3px rgba(255, 138, 61, 0.2);
+    }
+
+    .teacher-guide-box {
+      margin-top: 8px;
+      padding: 9px 12px;
+      border-radius: 12px;
+      background-color: var(--secondary-light);
+      border: 1.5px solid #bae6fd;
+      color: #0369a1;
+      font-size: 0.88rem;
+      font-weight: 700;
+      min-height: 38px;
+      display: flex;
+      align-items: center;
     }
 
     .btn {
@@ -246,7 +260,6 @@
 
     .timetable-subtitle {
       font-size: 0.85rem;
-      color: var(--text-muted);
       margin-bottom: 12px;
       background: var(--secondary-light);
       padding: 9px 12px;
@@ -428,6 +441,54 @@
       background: var(--success);
     }
 
+    /* 귀여운 초등학교 마스코트 캐릭터 & 말풍선 */
+    .header-brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .mascot-svg {
+      width: 68px;
+      height: 68px;
+      flex-shrink: 0;
+      animation: mascotBounce 2.6s ease-in-out infinite;
+      filter: drop-shadow(0 4px 8px rgba(180, 83, 9, 0.22));
+    }
+
+    @keyframes mascotBounce {
+      0%, 100% {
+        transform: translateY(0) rotate(-2deg);
+      }
+      50% {
+        transform: translateY(-6px) rotate(2deg);
+      }
+    }
+
+    .mascot-buddy-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #fff8eb;
+      border: 2px solid #fde68a;
+      border-radius: 16px;
+      padding: 10px 14px;
+      margin-bottom: 14px;
+    }
+
+    .mascot-mini-svg {
+      width: 48px;
+      height: 48px;
+      flex-shrink: 0;
+      animation: mascotBounce 3s ease-in-out infinite;
+    }
+
+    .mascot-speech {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #92400e;
+      line-height: 1.45;
+    }
     .config-banner {
       background: #fee2e2;
       border: 2px solid #fca5a5;
@@ -442,9 +503,36 @@
 <body>
   <header>
     <div class="header-inner">
-      <div>
-        <h1>초등학교 방과후 수업 신청 시스템</h1>
-        <p>분기별 동일한 주간 시간표로 간편하게 방과후 수업을 신청해 보세요!</p>
+      <div class="header-brand">
+        <svg class="mascot-svg" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="귀여운 병아리 마스코트">
+          <!-- 꼬리 -->
+          <path d="M16 46C9 43 8 36 14 34C16 39 19 41 21 43Z" fill="#ffd166" stroke="#92400e" stroke-width="2.5" stroke-linejoin="round"/>
+          <!-- 몸통 -->
+          <ellipse cx="40" cy="48" rx="22" ry="20" fill="#ffe066" stroke="#92400e" stroke-width="2.5"/>
+          <!-- 배 -->
+          <ellipse cx="40" cy="52" rx="14" ry="12" fill="#fff9db"/>
+          <!-- 왼발·오른발 -->
+          <path d="M31 67V73M26 73H35M49 67V73M45 73H54" stroke="#ea580c" stroke-width="2.8" stroke-linecap="round"/>
+          <!-- 왼날개·오른날개 -->
+          <path d="M19 44C12 46 11 54 18 56" fill="#ffd166" stroke="#92400e" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M61 44C68 46 69 54 62 56" fill="#ffd166" stroke="#92400e" stroke-width="2.5" stroke-linecap="round"/>
+          <!-- 머리 벼슬(새싹/왕관 느낌) -->
+          <path d="M35 28C32 19 38 14 40 21C42 14 48 19 45 28" fill="#ff9f1c" stroke="#92400e" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/>
+          <!-- 눈 -->
+          <circle cx="33" cy="43" r="3.4" fill="#1f2937"/>
+          <circle cx="47" cy="43" r="3.4" fill="#1f2937"/>
+          <circle cx="34.2" cy="41.8" r="1.2" fill="#ffffff"/>
+          <circle cx="48.2" cy="41.8" r="1.2" fill="#ffffff"/>
+          <!-- 볼터치 -->
+          <ellipse cx="27" cy="48" rx="4" ry="2.4" fill="#ff8fa3" opacity="0.75"/>
+          <ellipse cx="53" cy="48" rx="4" ry="2.4" fill="#ff8fa3" opacity="0.75"/>
+          <!-- 부리 -->
+          <path d="M36 47H44L40 52.5Z" fill="#ff7b00" stroke="#92400e" stroke-width="2" stroke-linejoin="round"/>
+        </svg>
+        <div>
+          <h1>초등학교 방과후 수업 신청 시스템</h1>
+          <p>4분기 방과후 프로그램을 신청해 보세요!</p>
+        </div>
       </div>
     </div>
   </header>
@@ -460,6 +548,23 @@
       <section class="card" aria-labelledby="formTitle">
         <h2 class="card-title" id="formTitle">방과후 수업 신청하기</h2>
 
+        <div class="mascot-buddy-wrap">
+          <svg class="mascot-mini-svg" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="별이 캐릭터">
+            <circle cx="32" cy="34" r="21" fill="#7dd3fc" stroke="#0369a1" stroke-width="2.5"/>
+            <path d="M32 13L35 7L38 13" stroke="#0284c7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="25" cy="32" r="2.8" fill="#1e293b"/>
+            <circle cx="39" cy="32" r="2.8" fill="#1e293b"/>
+            <circle cx="25.9" cy="31" r="1" fill="#ffffff"/>
+            <circle cx="39.9" cy="31" r="1" fill="#ffffff"/>
+            <ellipse cx="20" cy="36.5" rx="3.2" ry="2" fill="#fda4af" opacity="0.8"/>
+            <ellipse cx="44" cy="36.5" rx="3.2" ry="2" fill="#fda4af" opacity="0.8"/>
+            <path d="M28 38C29.5 41 34.5 41 36 38" stroke="#0369a1" stroke-width="2.3" stroke-linecap="round"/>
+          </svg>
+          <div class="mascot-speech">
+            안녕! 오늘도 즐거운 방과후 수업 골라 보자!<br />빈 7·8교시 칸을 눌러도 바로 선택돼요.
+          </div>
+        </div>
+
         <div class="period-banner">
           신청 가능 기한은 11/21~11/31까지 입니다.
         </div>
@@ -470,6 +575,9 @@
             <select id="programSelect" required>
               <option value="">-- 방과후 수업을 선택하세요 --</option>
             </select>
+            <div id="teacherGuideBox" class="teacher-guide-box">
+              방과후 수업을 선택하면 담당 선생님이 안내됩니다.
+            </div>
           </div>
 
           <div class="form-row">
@@ -493,7 +601,7 @@
             </div>
           </div>
 
-          <div class="form-row-3">
+          <div class="form-row-2">
             <div class="form-group">
               <label for="gradeSelect" class="required">학년</label>
               <select id="gradeSelect" required>
@@ -509,23 +617,6 @@
             <div class="form-group">
               <label for="classInput" class="required">반</label>
               <input type="text" id="classInput" placeholder="예: 1반" required />
-            </div>
-
-            <div class="form-group">
-              <label for="teacherSelect" class="required">담당 교사</label>
-              <select id="teacherSelect" required>
-                <option value="">선생님 선택</option>
-                <option value="김민수 선생님">김민수 선생님</option>
-                <option value="이지은 선생님">이지은 선생님</option>
-                <option value="박준호 선생님">박준호 선생님</option>
-                <option value="최수빈 선생님">최수빈 선생님</option>
-                <option value="정다은 선생님">정다은 선생님</option>
-                <option value="강태윤 선생님">강태윤 선생님</option>
-                <option value="조서연 선생님">조서연 선생님</option>
-                <option value="윤하늘 선생님">윤하늘 선생님</option>
-                <option value="장현우 선생님">장현우 선생님</option>
-                <option value="한소라 선생님">한소라 선생님</option>
-              </select>
             </div>
           </div>
 
@@ -631,6 +722,25 @@
     const SUPABASE_URL = "https://qmvsktmnizluzcrloujd.supabase.co";
     const SUPABASE_KEY = "sb_publishable_aQ7Vg_lNZ5N8kj5FpOBJkw_oX02aayz";
 
+    // 방과후 수업별 1:1 담당 교사 미리 설정 (수업명 기준 + fallback 목록)
+    const PROGRAM_TEACHER_MAP = {
+      "과학실험교실": "김민수",
+      "음악줄넘기교실": "이지은",
+      "코딩컴퓨터교실": "박준호",
+      "창의미술교실": "최수빈",
+      "뉴스포츠체육교실": "정다은",
+      "독서논술교실": "강태윤",
+      "방송댄스부": "조서연",
+      "종이접기부": "윤하늘",
+      "바이올린부": "장현우",
+      "피아노교실": "한소라"
+    };
+
+    const FALLBACK_TEACHERS = [
+      "김민수", "이지은", "박준호", "최수빈", "정다은",
+      "강태윤", "조서연", "윤하늘", "장현우", "한소라"
+    ];
+
     // DB의 apply_date(date 타입)와 주간 고정 요일(월~금)을 매핑하기 위한 기준 주간 날짜
     const FIXED_DAY_TO_DATE = {
       1: "2026-11-23", // 월요일
@@ -658,11 +768,11 @@
     const configBanner = document.getElementById("configBanner");
     const bookingForm = document.getElementById("bookingForm");
     const programSelect = document.getElementById("programSelect");
+    const teacherGuideBox = document.getElementById("teacherGuideBox");
     const daySelect = document.getElementById("daySelect");
     const periodSelect = document.getElementById("periodSelect");
     const gradeSelect = document.getElementById("gradeSelect");
     const classInput = document.getElementById("classInput");
-    const teacherSelect = document.getElementById("teacherSelect");
     const studentNameInput = document.getElementById("studentNameInput");
     const parentNameInput = document.getElementById("parentNameInput");
     const parentPhoneInput = document.getElementById("parentPhoneInput");
@@ -685,6 +795,32 @@
       }, 3200);
     }
 
+    // 프로그램에 매핑된 담당 교사 이름 반환
+    function getTeacherForProgram(progObj, fallbackIndex = 0) {
+      const progName = progObj?.name ? String(progObj.name).trim() : "";
+      if (progName && PROGRAM_TEACHER_MAP[progName]) {
+        return PROGRAM_TEACHER_MAP[progName];
+      }
+      const idx = Number.isInteger(fallbackIndex) && fallbackIndex >= 0
+        ? fallbackIndex % FALLBACK_TEACHERS.length
+        : 0;
+      return FALLBACK_TEACHERS[idx];
+    }
+
+    // 수업 선택 시 안내 문구 업데이트
+    function updateTeacherGuide() {
+      const selectedId = Number(programSelect.value);
+      if (!selectedId) {
+        teacherGuideBox.textContent = "방과후 수업을 선택하면 담당 선생님이 안내됩니다.";
+        return;
+      }
+
+      const idx = programsList.findIndex((p) => Number(p.id) === selectedId);
+      const progObj = idx >= 0 ? programsList[idx] : null;
+      const teacherName = getTeacherForProgram(progObj, idx >= 0 ? idx : 0);
+      teacherGuideBox.textContent = `이 수업은 ${teacherName} 선생님의 수업입니다.`;
+    }
+
     // 날짜(YYYY-MM-DD)에서 요일 번호(1=월 ~ 5=금) 추출
     function getDayIndexFromDateStr(dateStr) {
       if (!dateStr) return 1;
@@ -698,6 +834,7 @@
     // 앱 초기화: 먼저 빈 1~8교시 시간표를 즉시 그려서 화면이 비어 보이지 않게 처리
     async function initApp() {
       renderTimetable();
+      updateTeacherGuide();
 
       if (
         !SUPABASE_URL ||
@@ -742,8 +879,11 @@
       const prevFormVal = programSelect.value;
       programSelect.innerHTML = '<option value="">-- 방과후 수업을 선택하세요 --</option>';
 
-      programsList.forEach((prog) => {
-        const label = prog.location ? `${prog.name} (${prog.location})` : prog.name;
+      programsList.forEach((prog, idx) => {
+        const teacherName = getTeacherForProgram(prog, idx);
+        const label = prog.location
+          ? `${prog.name} (${prog.location} · ${teacherName} 선생님)`
+          : `${prog.name} (${teacherName} 선생님)`;
         const opt = document.createElement("option");
         opt.value = String(prog.id);
         opt.textContent = label;
@@ -751,6 +891,7 @@
       });
 
       if (prevFormVal) programSelect.value = prevFormVal;
+      updateTeacherGuide();
     }
 
     // 2. 예약 내역 불러오기
@@ -797,12 +938,14 @@
             if (matchedList.length > 0) {
               const itemsHtml = matchedList
                 .map((m) => {
-                  const progObj = m.programs || programsList.find((p) => p.id === m.program_id);
+                  const progIdx = programsList.findIndex((p) => Number(p.id) === Number(m.program_id));
+                  const progObj = m.programs || (progIdx >= 0 ? programsList[progIdx] : null);
                   const progName = progObj ? progObj.name : "방과후수업";
+                  const teacherName = getTeacherForProgram(progObj, progIdx >= 0 ? progIdx : 0);
                   return `
                     <div class="booked-item">
                       <span class="badge-booked">${escapeHtml(progName)}</span>
-                      <span class="booked-sub">${m.grade}학년 ${escapeHtml(m.class_name)} · ${escapeHtml(m.teacher_name)}</span>
+                      <span class="booked-sub">${m.grade}학년 ${escapeHtml(m.class_name)} · ${escapeHtml(teacherName)} 선생님</span>
                     </div>
                   `;
                 })
@@ -845,7 +988,7 @@
 
       const filtered = enrollmentsList.filter((item) => {
         if (!keyword) return true;
-        const progObj = item.programs || programsList.find((p) => p.id === item.program_id);
+        const progObj = item.programs || programsList.find((p) => Number(p.id) === Number(item.program_id));
         const progName = (progObj?.name || "").toLowerCase();
         return progName.includes(keyword);
       });
@@ -860,11 +1003,13 @@
 
       enrollmentListBody.innerHTML = filtered
         .map((item) => {
-          const progObj = item.programs || programsList.find((p) => p.id === item.program_id);
+          const progIdx = programsList.findIndex((p) => Number(p.id) === Number(item.program_id));
+          const progObj = item.programs || (progIdx >= 0 ? programsList[progIdx] : null);
           const progName = progObj ? progObj.name : `프로그램 #${item.program_id}`;
           const locationText = progObj && progObj.location ? ` (${progObj.location})` : "";
           const dayIdx = getDayIndexFromDateStr(item.apply_date);
           const dayText = DAY_LABELS[dayIdx] || "월요일";
+          const teacherName = getTeacherForProgram(progObj, progIdx >= 0 ? progIdx : 0);
 
           const meta = sessionPrivateMeta.get(item.id);
           const metaText = meta
@@ -877,7 +1022,7 @@
               <td><strong>${item.period}교시</strong></td>
               <td><span class="tag-program">${escapeHtml(progName)}</span>${escapeHtml(locationText)}</td>
               <td>${item.grade}학년 ${escapeHtml(item.class_name)}</td>
-              <td>${escapeHtml(item.teacher_name)}</td>
+              <td>${escapeHtml(teacherName)} 선생님</td>
               <td style="font-size:0.82rem; color:#4b5563;">${escapeHtml(metaText)}</td>
               <td>
                 <button type="button" class="btn btn-danger-sm" data-delete-id="${item.id}">취소</button>
@@ -902,13 +1047,16 @@
       const period = Number(periodSelect.value);
       const grade = Number(gradeSelect.value);
       const className = classInput.value.trim();
-      const teacherName = teacherSelect.value;
+
+      const progIdx = programsList.findIndex((p) => Number(p.id) === programId);
+      const progObj = progIdx >= 0 ? programsList[progIdx] : null;
+      const teacherName = `${getTeacherForProgram(progObj, progIdx >= 0 ? progIdx : 0)} 선생님`;
 
       const studentName = studentNameInput.value.trim();
       const parentName = parentNameInput.value.trim();
       const parentPhone = parentPhoneInput.value.trim();
 
-      if (!programId || !dayIdx || !className || !teacherName) {
+      if (!programId || !dayIdx || !className) {
         showToast("필수 항목을 모두 선택·입력해 주세요.", "error");
         return;
       }
@@ -974,7 +1122,7 @@
 
       const deleteId = Number(btn.dataset.deleteId);
       const target = enrollmentsList.find((item) => item.id === deleteId);
-      const progObj = target?.programs || programsList.find((p) => p.id === target?.program_id);
+      const progObj = target?.programs || programsList.find((p) => Number(p.id) === Number(target?.program_id));
       const dayText = target ? DAY_LABELS[getDayIndexFromDateStr(target.apply_date)] : "";
       const confirmMsg = target
         ? `[${dayText} ${target.period}교시] ${progObj?.name || ""} (${target.grade}학년 ${target.class_name}) 신청을 취소하시겠습니까?`
@@ -999,6 +1147,8 @@
     });
 
     // 이벤트 바인딩
+    programSelect.addEventListener("change", updateTeacherGuide);
+
     searchInput.addEventListener("input", () => {
       renderEnrollmentList();
     });
