@@ -598,3 +598,722 @@
         <form id="bookingForm">
           <div class="form-group">
             <label for="programSelect" class="required">방과후 수업 선택</label>
+            <select id="programSelect" required>
+              <option value="">-- 방과후 수업을 선택하세요 --</option>
+            </select>
+            <div id="teacherGuideBox" class="teacher-guide-box">
+              방과후 수업을 선택하면 담당 선생님이 안내됩니다.
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="daySelect" class="required">수업 요일</label>
+              <select id="daySelect" required>
+                <option value="1">월요일</option>
+                <option value="2">화요일</option>
+                <option value="3">수요일</option>
+                <option value="4">목요일</option>
+                <option value="5">금요일</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="periodSelect" class="required">교시 선택</label>
+              <select id="periodSelect" required>
+                <option value="7" selected>7교시 (방과후 1부)</option>
+                <option value="8">8교시 (방과후 2부)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label for="gradeSelect" class="required">학년</label>
+              <select id="gradeSelect" required>
+                <option value="1">1학년</option>
+                <option value="2">2학년</option>
+                <option value="3">3학년</option>
+                <option value="4">4학년</option>
+                <option value="5">5학년</option>
+                <option value="6">6학년</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="classInput" class="required">반</label>
+              <input type="text" id="classInput" placeholder="예: 1반" required />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="studentNameInput" class="required">학생 이름</label>
+              <input type="text" id="studentNameInput" placeholder="예: 김하늘" required />
+            </div>
+
+            <div class="form-group">
+              <label for="parentNameInput" class="required">학부모 성함</label>
+              <input type="text" id="parentNameInput" placeholder="예: 김철수" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="parentPhoneInput" class="required">학부모 전화번호</label>
+            <input type="tel" id="parentPhoneInput" placeholder="예: 010-1234-5678" required />
+          </div>
+
+          <button type="submit" id="submitBtn" class="btn btn-primary">방과후 수업 신청하기</button>
+        </form>
+      </section>
+
+      <!-- 오른쪽: 분기 고정 주간 시간표 -->
+      <section class="card" aria-labelledby="timetableTitle">
+        <div class="card-title">
+          <span id="timetableTitle">주간 방과후 시간표</span>
+          <span style="font-family:'Noto Sans KR',sans-serif; font-size:0.82rem; font-weight:700; color:#ff7b00; background:#fff3e6; padding:4px 10px; border-radius:999px;">분기 공통 시간표</span>
+        </div>
+
+        <p class="timetable-subtitle">
+          분기 동안 매주 동일한 시간표로 운영됩니다. 빈 7·8교시 칸을 누르면 요일과 교시가 자동으로 선택돼요!
+        </p>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th class="period-col">교시</th>
+                <th>월</th>
+                <th>화</th>
+                <th>수</th>
+                <th>목</th>
+                <th>금</th>
+              </tr>
+            </thead>
+            <tbody id="timetableBody">
+              <!-- JS로 1~8교시 즉시 렌더링 -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <!-- 하단: 전체 예약 목록 및 검색/취소 -->
+    <section class="card" aria-labelledby="listTitle">
+      <div class="card-title">
+        <span id="listTitle">방과후 신청 내역 목록</span>
+        <span id="totalCountBadge" style="font-family:'Noto Sans KR',sans-serif; font-size:0.88rem; color:#6b7280; font-weight:700;">총 0건</span>
+      </div>
+
+      <div class="search-bar">
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="방과후 수업 이름으로 검색 (예: 과학실험, 피아노, 코딩...)"
+          aria-label="방과후 수업 이름 검색"
+        />
+        <button type="button" id="clearSearchBtn" class="btn btn-outline">전체 보기</button>
+        <button type="button" id="refreshBtn" class="btn btn-outline">새로고침</button>
+      </div>
+
+      <div class="table-wrap">
+        <table class="list-table">
+          <thead>
+            <tr>
+              <th>수업 요일</th>
+              <th>교시</th>
+              <th>방과후 수업 (장소)</th>
+              <th>학년/반</th>
+              <th>담당 교사</th>
+              <th>학생 / 학부모 (현재 화면)</th>
+              <th>관리</th>
+            </tr>
+          </thead>
+          <tbody id="enrollmentListBody">
+            <tr>
+              <td colspan="7" class="empty-state">데이터를 불러오는 중입니다...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    // =========================================================================
+    // [설정 영역] Supabase 프로젝트 URL과 Publishable Key
+    // =========================================================================
+    const SUPABASE_URL = "https://qmvsktmnizluzcrloujd.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_aQ7Vg_lNZ5N8kj5FpOBJkw_oX02aayz";
+
+    // 방과후 수업별 1:1 담당 교사 미리 설정 (수업명 기준 + fallback 목록)
+    const PROGRAM_TEACHER_MAP = {
+      "과학실험교실": "김민수",
+      "음악줄넘기교실": "이지은",
+      "코딩컴퓨터교실": "박준호",
+      "창의미술교실": "최수빈",
+      "뉴스포츠체육교실": "정다은",
+      "독서논술교실": "강태윤",
+      "방송댄스부": "조서연",
+      "종이접기부": "윤하늘",
+      "바이올린부": "장현우",
+      "피아노교실": "한소라"
+    };
+
+    const FALLBACK_TEACHERS = [
+      "김민수", "이지은", "박준호", "최수빈", "정다은",
+      "강태윤", "조서연", "윤하늘", "장현우", "한소라"
+    ];
+
+    // DB의 apply_date(date 타입)와 주간 고정 요일(월~금)을 매핑하기 위한 기준 주간 날짜
+    const FIXED_DAY_TO_DATE = {
+      1: "2026-11-23", // 월요일
+      2: "2026-11-24", // 화요일
+      3: "2026-11-25", // 수요일
+      4: "2026-11-26", // 목요일
+      5: "2026-11-27"  // 금요일
+    };
+
+    const DAY_LABELS = {
+      1: "월요일",
+      2: "화요일",
+      3: "수요일",
+      4: "목요일",
+      5: "금요일"
+    };
+
+    const MAX_CAPACITY_PER_SLOT = 20;
+
+    // 전역 상태 변수
+    let supabaseClient = null;
+    let programsList = [];
+    let enrollmentsList = [];
+    const sessionPrivateMeta = new Map();
+
+    // DOM 요소 참조
+    const configBanner = document.getElementById("configBanner");
+    const bookingForm = document.getElementById("bookingForm");
+    const programSelect = document.getElementById("programSelect");
+    const teacherGuideBox = document.getElementById("teacherGuideBox");
+    const daySelect = document.getElementById("daySelect");
+    const periodSelect = document.getElementById("periodSelect");
+    const gradeSelect = document.getElementById("gradeSelect");
+    const classInput = document.getElementById("classInput");
+    const studentNameInput = document.getElementById("studentNameInput");
+    const parentNameInput = document.getElementById("parentNameInput");
+    const parentPhoneInput = document.getElementById("parentPhoneInput");
+    const submitBtn = document.getElementById("submitBtn");
+
+    const timetableBody = document.getElementById("timetableBody");
+    const searchInput = document.getElementById("searchInput");
+    const enrollmentListBody = document.getElementById("enrollmentListBody");
+    const totalCountBadge = document.getElementById("totalCountBadge");
+    const toastEl = document.getElementById("toast");
+
+    // 토스트 알림 함수
+    let toastTimer = null;
+    function showToast(message, type = "default") {
+      toastEl.textContent = message;
+      toastEl.className = "toast show" + (type !== "default" ? " " + type : "");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toastEl.classList.remove("show");
+      }, 3200);
+    }
+
+    // 프로그램에 매핑된 담당 교사 이름 반환 (성만/이름 포함 문자열이 오더라도 순수 교사명 반환)
+    function getTeacherForProgram(progObj, fallbackIndex = 0) {
+      const progName = progObj?.name ? String(progObj.name).trim() : "";
+      if (progName && PROGRAM_TEACHER_MAP[progName]) {
+        return PROGRAM_TEACHER_MAP[progName];
+      }
+      const idx = Number.isInteger(fallbackIndex) && fallbackIndex >= 0
+        ? fallbackIndex % FALLBACK_TEACHERS.length
+        : 0;
+      return FALLBACK_TEACHERS[idx];
+    }
+
+        function getSlotEnrollmentCount(programId, dayIdx, period) {
+      return enrollmentsList.filter(
+        (item) =>
+          Number(item.program_id) === Number(programId) &&
+          getDayIndexFromDateStr(item.apply_date) === Number(dayIdx) &&
+          Number(item.period) === Number(period)
+      ).length;
+    }
+
+    function getSlotEnrollments(programId, dayIdx, period) {
+      return enrollmentsList.filter(
+        (item) =>
+          Number(item.program_id) === Number(programId) &&
+          getDayIndexFromDateStr(item.apply_date) === Number(dayIdx) &&
+          Number(item.period) === Number(period)
+      );
+    }
+
+    // 수업 선택 시 안내 문구 업데이트
+    function updateTeacherGuide() {
+      const selectedId = Number(programSelect.value);
+      if (!selectedId) {
+        teacherGuideBox.textContent = "방과후 수업을 선택하면 담당 선생님이 안내됩니다.";
+        return;
+      }
+
+      const idx = programsList.findIndex((p) => Number(p.id) === selectedId);
+      const progObj = idx >= 0 ? programsList[idx] : null;
+      const teacherName = getTeacherForProgram(progObj, idx >= 0 ? idx : 0);
+      teacherGuideBox.textContent = `이 수업은 ${teacherName} 선생님의 수업입니다.`;
+    }
+
+    // 날짜(YYYY-MM-DD)에서 요일 번호(1=월 ~ 5=금) 추출
+    function getDayIndexFromDateStr(dateStr) {
+      if (!dateStr) return 1;
+      const parts = dateStr.split("-").map(Number);
+      if (parts.length !== 3) return 1;
+      const d = new Date(parts[0], parts[1] - 1, parts[2]);
+      const day = d.getDay(); // 0(일) ~ 6(토)
+      return day >= 1 && day <= 5 ? day : 1;
+    }
+
+    // 앱 초기화: 먼저 빈 1~8교시 시간표를 즉시 그려서 화면이 비어 보이지 않게 처리
+    async function initApp() {
+      renderTimetable();
+      updateTeacherGuide();
+
+      if (
+        !SUPABASE_URL ||
+        SUPABASE_URL.includes("YOUR_PROJECT_ID") ||
+        !SUPABASE_KEY ||
+        SUPABASE_KEY.includes("YOUR_SUPABASE")
+      ) {
+        configBanner.style.display = "block";
+        enrollmentListBody.innerHTML =
+          '<tr><td colspan="7" class="empty-state">상단 코드에 SUPABASE_URL과 SUPABASE_KEY를 입력하면 데이터가 표시됩니다.</td></tr>';
+        return;
+      }
+
+      if (!window.supabase) {
+        showToast("Supabase 라이브러리를 불러오지 못했습니다. 인터넷 연결을 확인해 주세요.", "error");
+        return;
+      }
+
+      supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+      await loadPrograms();
+      await loadEnrollments();
+    }
+
+    // 1. 방과후 프로그램 목록 불러오기
+    async function loadPrograms() {
+      if (!supabaseClient) return;
+
+      const { data, error } = await supabaseClient
+        .from("programs")
+        .select("id, name, location")
+        .order("id", { ascending: true });
+
+      if (error) {
+        console.error("프로그램 조회 오류:", error);
+        showToast("프로그램 목록을 불러오지 못했습니다.", "error");
+        return;
+      }
+
+      programsList = data || [];
+
+      const prevFormVal = programSelect.value;
+      programSelect.innerHTML = '<option value="">-- 방과후 수업을 선택하세요 --</option>';
+
+      programsList.forEach((prog, idx) => {
+        const teacherName = getTeacherForProgram(prog, idx);
+        const label = prog.location
+          ? `${prog.name} (${prog.location} · ${teacherName} 선생님)`
+          : `${prog.name} (${teacherName} 선생님)`;
+        const opt = document.createElement("option");
+        opt.value = String(prog.id);
+        opt.textContent = label;
+        programSelect.appendChild(opt);
+      });
+
+      if (prevFormVal) programSelect.value = prevFormVal;
+      updateTeacherGuide();
+    }
+
+    // 2. 예약 내역 불러오기
+    async function loadEnrollments() {
+      if (!supabaseClient) return;
+
+      const { data, error } = await supabaseClient
+        .from("enrollments")
+        .select("id, program_id, apply_date, period, teacher_name, grade, class_name, created_at, programs(id, name, location)")
+        .order("apply_date", { ascending: true })
+        .order("period", { ascending: true });
+
+      if (error) {
+        console.error("예약 내역 조회 오류:", error);
+        showToast("신청 내역을 불러오지 못했습니다.", "error");
+        return;
+      }
+
+      enrollmentsList = data || [];
+      renderTimetable();
+      renderEnrollmentList();
+    }
+
+    // 3. 분기 고정 주간 시간표 렌더링 (월~금 × 1~8교시, 1~6교시는 '정규수업', 7~8교시는 신청 현황 표시)
+    function renderTimetable() {
+      let bodyHtml = "";
+
+      for (let period = 1; period <= 8; period++) {
+        bodyHtml += "<tr>";
+        bodyHtml += `<td class="period-col">${period}교시</td>`;
+
+        if (period <= 6) {
+          for (let dayIdx = 1; dayIdx <= 5; dayIdx++) {
+            bodyHtml += `<td class="cell-regular">정규수업</td>`;
+          }
+        } else {
+          for (let dayIdx = 1; dayIdx <= 5; dayIdx++) {
+            const matchedList = enrollmentsList.filter(
+              (item) =>
+                getDayIndexFromDateStr(item.apply_date) === dayIdx &&
+                Number(item.period) === period
+            );
+
+            if (matchedList.length > 0) {
+              // 같은 요일·교시·수업 단위로 묶어 선착순 (신청인원/20) 표시
+              const groupedMap = new Map();
+              matchedList.forEach((m) => {
+                const key = String(m.program_id);
+                if (!groupedMap.has(key)) {
+                  groupedMap.set(key, []);
+                }
+                groupedMap.get(key).push(m);
+              });
+
+              let hasFullSlot = false;
+              const itemsHtml = Array.from(groupedMap.entries())
+                .map(([progIdKey, groupItems]) => {
+                  const progIdx = programsList.findIndex((p) => Number(p.id) === Number(progIdKey));
+                  const progObj = groupItems[0].programs || (progIdx >= 0 ? programsList[progIdx] : null);
+                  const progName = progObj ? progObj.name : "방과후수업";
+                  const teacherName = getTeacherForProgram(progObj, progIdx >= 0 ? progIdx : 0);
+                  const currentCount = groupItems.length;
+                  const isFull = currentCount >= MAX_CAPACITY_PER_SLOT;
+                  if (isFull) hasFullSlot = true;
+                  const latest = groupItems[groupItems.length - 1];
+                  const pillClass = isFull ? "capacity-pill full" : "capacity-pill";
+                  const statusLabel = isFull ? `(${currentCount}/${MAX_CAPACITY_PER_SLOT} 마감)` : `(${currentCount}/${MAX_CAPACITY_PER_SLOT})`;
+
+                  return `
+                    <div class="booked-item">
+                      <span class="badge-booked">${escapeHtml(progName)}</span>
+                      <span class="booked-sub">${latest.grade}학년 ${escapeHtml(latest.class_name)} · ${escapeHtml(teacherName)} 선생님</span>
+                      <span class="${pillClass}">${escapeHtml(statusLabel)}</span>
+                    </div>
+                  `;
+                })
+                .join("");
+
+              const tdClass = hasFullSlot ? "cell-full" : "cell-booked";
+              bodyHtml += `<td class="${tdClass}">${itemsHtml}</td>`;
+            } else {
+              bodyHtml += `
+                <td class="cell-empty" data-day="${dayIdx}" data-period="${period}" title="클릭하여 ${DAY_LABELS[dayIdx]} ${period}교시 선택">
+                  신청 가능
+                </td>
+              `;
+            }
+          }
+        }
+
+        bodyHtml += "</tr>";
+      }
+
+      timetableBody.innerHTML = bodyHtml;
+    }
+
+    // 빈 시간표 셀 클릭 시 등록 폼에 요일·교시 자동 반영
+    timetableBody.addEventListener("click", (e) => {
+      const cell = e.target.closest(".cell-empty");
+      if (!cell) return;
+
+      const dayVal = cell.dataset.day;
+      const periodVal = cell.dataset.period;
+      if (dayVal) daySelect.value = dayVal;
+      if (periodVal) periodSelect.value = periodVal;
+
+      showToast(`${DAY_LABELS[dayVal]} ${periodVal}교시가 선택되었습니다.`);
+      bookingForm.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    });
+
+    // 4. 예약 목록 렌더링 (방과후 수업 이름 검색 필터 포함)
+    function renderEnrollmentList() {
+      const keyword = searchInput.value.trim().toLowerCase();
+
+      const filtered = enrollmentsList.filter((item) => {
+        if (!keyword) return true;
+        const progObj = item.programs || programsList.find((p) => Number(p.id) === Number(item.program_id));
+        const progName = (progObj?.name || "").toLowerCase();
+        return progName.includes(keyword);
+      });
+
+      totalCountBadge.textContent = `총 ${filtered.length}건`;
+
+      if (filtered.length === 0) {
+        enrollmentListBody.innerHTML =
+          '<tr><td colspan="7" class="empty-state">조건에 해당하는 방과후 신청 내역이 없습니다.</td></tr>';
+        return;
+      }
+
+      enrollmentListBody.innerHTML = filtered
+        .map((item) => {
+          const progIdx = programsList.findIndex((p) => Number(p.id) === Number(item.program_id));
+          const progObj = item.programs || (progIdx >= 0 ? programsList[progIdx] : null);
+          const progName = progObj ? progObj.name : `프로그램 #${item.program_id}`;
+          const locationText = progObj && progObj.location ? ` (${progObj.location})` : "";
+          const dayIdx = getDayIndexFromDateStr(item.apply_date);
+          const dayText = DAY_LABELS[dayIdx] || "월요일";
+          const teacherName = getTeacherForProgram(progObj, progIdx >= 0 ? progIdx : 0);
+
+          const meta = sessionPrivateMeta.get(item.id);
+          const metaText = meta
+            ? `${meta.studentName || "-"} / ${meta.parentName || "-"} (${meta.parentPhone || "-"})`
+            : "-";
+
+          const slotCount = getSlotEnrollmentCount(item.program_id, dayIdx, item.period);
+          const isSlotFull = slotCount >= MAX_CAPACITY_PER_SLOT;
+          const countBadgeHtml = isSlotFull
+            ? `<span class="capacity-pill full">(${slotCount}/${MAX_CAPACITY_PER_SLOT} 마감)</span>`
+            : `<span class="capacity-pill">(${slotCount}/${MAX_CAPACITY_PER_SLOT})</span>`;
+
+          return `
+            <tr>
+              <td><span class="tag-day">${escapeHtml(dayText)}</span></td>
+              <td><strong>${item.period}교시</strong></td>
+              <td><span class="tag-program">${escapeHtml(progName)}</span>${escapeHtml(locationText)} ${countBadgeHtml}</td>
+              <td>${item.grade}학년 ${escapeHtml(item.class_name)}</td>
+              <td>${escapeHtml(teacherName)} 선생님</td>
+              <td style="font-size:0.82rem; color:#4b5563;">${escapeHtml(metaText)}</td>
+              <td>
+                <button type="button" class="btn btn-danger-sm" data-delete-id="${item.id}">취소</button>
+              </td>
+            </tr>
+          `;
+        })
+        .join("");
+    }
+
+    // 5. 예약 등록 처리
+    bookingForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if (!supabaseClient) {
+        showToast("Supabase 설정을 먼저 확인해 주세요.", "error");
+        return;
+      }
+
+      const programId = Number(programSelect.value);
+      const dayIdx = Number(daySelect.value);
+      const applyDate = FIXED_DAY_TO_DATE[dayIdx] || "2026-11-23";
+      const period = Number(periodSelect.value);
+      const grade = Number(gradeSelect.value);
+      const className = classInput.value.trim();
+
+      const progIdx = programsList.findIndex((p) => Number(p.id) === programId);
+      const progObj = progIdx >= 0 ? programsList[progIdx] : null;
+      const teacherName = `${getTeacherForProgram(progObj, progIdx >= 0 ? progIdx : 0)} 선생님`;
+
+      const studentName = studentNameInput.value.trim();
+      const parentName = parentNameInput.value.trim();
+      const parentPhone = parentPhoneInput.value.trim();
+
+      if (!programId || !dayIdx || !className || !studentName || !parentName || !parentPhone) {
+        showToast("모든 입력 항목을 빠짐없이 선택·입력해 주세요.", "error");
+        return;
+      }
+
+      if (period < 7 || period > 8) {
+        showToast("방과후 수업은 7교시 또는 8교시만 신청할 수 있습니다.", "error");
+        return;
+      }
+
+      // 제출 직전 최신 DB 데이터 기준으로 중복 신청 및 선착순 정원(20명) 검증
+      await loadEnrollments();
+
+      const normalizedStudent = studentName.replace(/\s+/g, "").toLowerCase();
+      const normalizedClass = className.replace(/\s+/g, "").toLowerCase();
+
+      const hasDuplicateStudentSlot = enrollmentsList.some((item) => {
+        const sameDay = getDayIndexFromDateStr(item.apply_date) === dayIdx;
+        const samePeriod = Number(item.period) === period;
+        if (!sameDay || !samePeriod) return false;
+
+        const meta = sessionPrivateMeta.get(item.id);
+        const itemStudent = (meta?.studentName || item.student_name || "")
+          .replace(/\s+/g, "")
+          .toLowerCase();
+        if (!itemStudent || itemStudent !== normalizedStudent) return false;
+
+        const itemGrade = Number(item.grade);
+        const itemClass = String(item.class_name || "")
+          .replace(/\s+/g, "")
+          .toLowerCase();
+
+        return itemGrade === grade && itemClass === normalizedClass;
+      });
+
+      if (hasDuplicateStudentSlot) {
+        const msg = `${grade}학년 ${className} ${studentName} 학생은 이미 ${DAY_LABELS[dayIdx]} ${period}교시에 신청한 수업이 있습니다.`;
+        alert(msg);
+        showToast(msg, "error");
+        return;
+      }
+
+      const hasDuplicateStudentProgram = enrollmentsList.some((item) => {
+        if (Number(item.program_id) !== programId) return false;
+
+        const meta = sessionPrivateMeta.get(item.id);
+        const itemStudent = (meta?.studentName || item.student_name || "")
+          .replace(/\s+/g, "")
+          .toLowerCase();
+        if (!itemStudent || itemStudent !== normalizedStudent) return false;
+
+        const itemGrade = Number(item.grade);
+        const itemClass = String(item.class_name || "")
+          .replace(/\s+/g, "")
+          .toLowerCase();
+
+        return itemGrade === grade && itemClass === normalizedClass;
+      });
+
+      if (hasDuplicateStudentProgram) {
+        const msg = `${grade}학년 ${className} ${studentName} 학생은 이미 '${progObj?.name || "해당 방과후 수업"}'을 신청했습니다. 같은 수업은 중복 신청할 수 없습니다.`;
+        alert(msg);
+        showToast(msg, "error");
+        return;
+      }
+
+      const currentSlotCount = getSlotEnrollmentCount(programId, dayIdx, period);
+
+      if (currentSlotCount >= MAX_CAPACITY_PER_SLOT) {
+        const msg = `${DAY_LABELS[dayIdx]} ${period}교시 ${progObj?.name || "해당 수업"}은 정원(${MAX_CAPACITY_PER_SLOT}명)이 마감되어 신청할 수 없습니다.`;
+        alert(msg);
+        showToast(msg, "error");
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "신청 중...";
+
+      const { data, error } = await supabaseClient
+        .from("enrollments")
+        .insert([
+          {
+            program_id: programId,
+            apply_date: applyDate,
+            period: period,
+            teacher_name: teacherName,
+            grade: grade,
+            class_name: className
+          }
+        ])
+        .select("id")
+        .single();
+
+      submitBtn.disabled = false;
+      submitBtn.textContent = "방과후 수업 신청하기";
+
+      if (error) {
+        console.error("예약 저장 오류:", error);
+        if (error.code === "23505") {
+          alert("이미 신청된 수업이 있습니다.");
+          showToast("이미 신청된 수업이 있습니다.", "error");
+          await loadEnrollments();
+          return;
+        }
+        showToast(`저장 중 오류가 발생했습니다: ${error.message}`, "error");
+        return;
+      }
+
+      if (data && data.id && (studentName || parentName || parentPhone)) {
+        sessionPrivateMeta.set(data.id, {
+          studentName,
+          parentName,
+          parentPhone
+        });
+      }
+
+      studentNameInput.value = "";
+      parentNameInput.value = "";
+      parentPhoneInput.value = "";
+
+      showToast("방과후 수업 신청이 완료되었습니다!", "success");
+      await loadEnrollments();
+    });
+
+    // 6. 예약 취소 (목록에서 취소 버튼 -> 확인창 -> 삭제)
+    enrollmentListBody.addEventListener("click", async (e) => {
+      const btn = e.target.closest("[data-delete-id]");
+      if (!btn || !supabaseClient) return;
+
+      const deleteId = Number(btn.dataset.deleteId);
+      const target = enrollmentsList.find((item) => item.id === deleteId);
+      const progObj = target?.programs || programsList.find((p) => Number(p.id) === Number(target?.program_id));
+      const dayText = target ? DAY_LABELS[getDayIndexFromDateStr(target.apply_date)] : "";
+      const confirmMsg = target
+        ? `[${dayText} ${target.period}교시] ${progObj?.name || ""} (${target.grade}학년 ${target.class_name}) 신청을 취소하시겠습니까?`
+        : "선택한 방과후 수업 신청을 취소하시겠습니까?";
+
+      if (!window.confirm(confirmMsg)) return;
+
+      const { error } = await supabaseClient
+        .from("enrollments")
+        .delete()
+        .eq("id", deleteId);
+
+      if (error) {
+        console.error("예약 삭제 오류:", error);
+        showToast(`취소 중 오류가 발생했습니다: ${error.message}`, "error");
+        return;
+      }
+
+      sessionPrivateMeta.delete(deleteId);
+      showToast("신청이 취소되었습니다.", "success");
+      await loadEnrollments();
+    });
+
+    // 이벤트 바인딩
+    programSelect.addEventListener("change", updateTeacherGuide);
+
+    searchInput.addEventListener("input", () => {
+      renderEnrollmentList();
+    });
+
+    document.getElementById("clearSearchBtn").addEventListener("click", () => {
+      searchInput.value = "";
+      renderEnrollmentList();
+    });
+
+    document.getElementById("refreshBtn").addEventListener("click", async () => {
+      await loadPrograms();
+      await loadEnrollments();
+      showToast("최신 신청 현황을 불러왔습니다.");
+    });
+
+    // XSS 방지용 이스케이프 함수
+    function escapeHtml(str) {
+      if (str === null || str === undefined) return "";
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    // 앱 시작
+    initApp();
+  </script>
+</body>
+</html>
