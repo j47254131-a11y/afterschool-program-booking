@@ -622,19 +622,19 @@
 
           <div class="form-row">
             <div class="form-group">
-              <label for="studentNameInput">학생 이름</label>
-              <input type="text" id="studentNameInput" placeholder="예: 김하늘" />
+              <label for="studentNameInput" class="required">학생 이름</label>
+              <input type="text" id="studentNameInput" placeholder="예: 김하늘" required />
             </div>
 
             <div class="form-group">
-              <label for="parentNameInput">학부모 성함</label>
-              <input type="text" id="parentNameInput" placeholder="예: 김철수" />
+              <label for="parentNameInput" class="required">학부모 성함</label>
+              <input type="text" id="parentNameInput" placeholder="예: 김철수" required />
             </div>
           </div>
 
           <div class="form-group">
-            <label for="parentPhoneInput">학부모 전화번호</label>
-            <input type="tel" id="parentPhoneInput" placeholder="예: 010-1234-5678" />
+            <label for="parentPhoneInput" class="required">학부모 전화번호</label>
+            <input type="tel" id="parentPhoneInput" placeholder="예: 010-1234-5678" required />
           </div>
 
           <button type="submit" id="submitBtn" class="btn btn-primary">방과후 수업 신청하기</button>
@@ -1056,8 +1056,8 @@
       const parentName = parentNameInput.value.trim();
       const parentPhone = parentPhoneInput.value.trim();
 
-      if (!programId || !dayIdx || !className) {
-        showToast("필수 항목을 모두 선택·입력해 주세요.", "error");
+      if (!programId || !dayIdx || !className || !studentName || !parentName || !parentPhone) {
+        showToast("모든 입력 항목을 빠짐없이 선택·입력해 주세요.", "error");
         return;
       }
 
