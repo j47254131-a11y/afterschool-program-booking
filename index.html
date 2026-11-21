@@ -3,26 +3,32 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>초등학교 방과후 수업 예약 시스템</title>
+  <title>초등학교 방과후 수업 신청 시스템</title>
   <!-- Supabase JS v2 CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- 둥글둥글 귀여운 초등학교 느낌의 웹폰트 (Jua & Noto Sans KR) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --primary: #2563eb;
-      --primary-hover: #1d4ed8;
-      --primary-light: #eff6ff;
-      --bg: #f8fafc;
+      --primary: #ff8a3d;
+      --primary-hover: #f27420;
+      --primary-light: #fff3e6;
+      --secondary: #4ea8de;
+      --secondary-light: #e8f5fd;
+      --bg: #fffdf7;
       --card: #ffffff;
-      --text: #1e293b;
-      --text-muted: #64748b;
-      --border: #e2e8f0;
-      --success: #059669;
-      --success-bg: #ecfdf5;
-      --danger: #dc2626;
-      --danger-bg: #fef2f2;
-      --regular-bg: #f1f5f9;
-      --radius: 12px;
-      --shadow: 0 2px 10px rgba(15, 23, 42, 0.05);
+      --text: #374151;
+      --text-muted: #6b7280;
+      --border: #f3e5d0;
+      --success: #16a34a;
+      --success-bg: #dcfce7;
+      --danger: #ef4444;
+      --danger-bg: #fee2e2;
+      --regular-bg: #f8fafc;
+      --radius: 20px;
+      --shadow: 0 6px 18px rgba(255, 138, 61, 0.12);
     }
 
     * {
@@ -32,18 +38,22 @@
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Pretendard", "Noto Sans KR", "Apple SD Gothic Neo", sans-serif;
+      font-family: "Noto Sans KR", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
       background-color: var(--bg);
+      background-image: radial-gradient(#fde68a 1.2px, transparent 1.2px);
+      background-size: 24px 24px;
       color: var(--text);
       line-height: 1.5;
-      padding-bottom: 48px;
+      padding-bottom: 56px;
     }
 
     header {
-      background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%);
+      background: linear-gradient(135deg, #ffb703 0%, #ff8a3d 100%);
       color: #ffffff;
-      padding: 20px 16px;
-      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.2);
+      padding: 24px 16px;
+      border-bottom-left-radius: 28px;
+      border-bottom-right-radius: 28px;
+      box-shadow: 0 4px 14px rgba(255, 138, 61, 0.25);
     }
 
     .header-inner {
@@ -57,65 +67,72 @@
     }
 
     header h1 {
-      font-size: 1.35rem;
-      font-weight: 700;
-      letter-spacing: -0.02em;
+      font-family: "Jua", sans-serif;
+      font-size: 1.7rem;
+      font-weight: 400;
+      letter-spacing: 0.01em;
+      text-shadow: 0 2px 4px rgba(180, 83, 9, 0.2);
     }
 
     header p {
-      font-size: 0.875rem;
-      opacity: 0.9;
+      font-size: 0.92rem;
+      font-weight: 500;
+      opacity: 0.95;
+      margin-top: 2px;
     }
 
     .container {
       max-width: 1120px;
-      margin: 20px auto 0;
+      margin: 24px auto 0;
       padding: 0 16px;
       display: grid;
       grid-template-columns: 1fr;
-      gap: 20px;
+      gap: 22px;
     }
 
     @media (min-width: 960px) {
       .top-grid {
         display: grid;
-        grid-template-columns: 380px 1fr;
-        gap: 20px;
+        grid-template-columns: 390px 1fr;
+        gap: 22px;
         align-items: start;
       }
     }
 
     .card {
       background: var(--card);
-      border: 1px solid var(--border);
+      border: 2px solid var(--border);
       border-radius: var(--radius);
-      padding: 20px;
+      padding: 22px;
       box-shadow: var(--shadow);
     }
 
     .card-title {
-      font-size: 1.1rem;
-      font-weight: 700;
+      font-family: "Jua", sans-serif;
+      font-size: 1.3rem;
+      font-weight: 400;
       margin-bottom: 14px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 8px;
-      color: #0f172a;
+      color: #1f2937;
     }
 
-    .notice-box {
-      background: #fffbeb;
-      border: 1px solid #fde68a;
+    .period-banner {
+      background: #fef3c7;
+      border: 2px dashed #f59e0b;
       color: #92400e;
-      font-size: 0.8rem;
-      padding: 10px 12px;
-      border-radius: 8px;
-      margin-bottom: 14px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      padding: 11px 14px;
+      border-radius: 14px;
+      margin-bottom: 16px;
+      text-align: center;
     }
 
     .form-group {
-      margin-bottom: 12px;
+      margin-bottom: 13px;
     }
 
     .form-row {
@@ -126,16 +143,16 @@
 
     .form-row-3 {
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-columns: 1fr 1fr 1.2fr;
       gap: 8px;
     }
 
     label {
       display: block;
-      font-size: 0.85rem;
-      font-weight: 600;
+      font-size: 0.86rem;
+      font-weight: 700;
       margin-bottom: 5px;
-      color: #334155;
+      color: #4b5563;
     }
 
     .required::after {
@@ -146,9 +163,10 @@
     input, select {
       width: 100%;
       padding: 10px 12px;
-      border: 1px solid #cbd5e1;
-      border-radius: 8px;
+      border: 2px solid #e5e7eb;
+      border-radius: 12px;
       font-size: 0.95rem;
+      font-family: inherit;
       color: var(--text);
       background-color: #ffffff;
       transition: border-color 0.15s, box-shadow 0.15s;
@@ -157,7 +175,7 @@
     input:focus, select:focus {
       outline: none;
       border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+      box-shadow: 0 0 0 3px rgba(255, 138, 61, 0.2);
     }
 
     .btn {
@@ -166,167 +184,167 @@
       justify-content: center;
       gap: 6px;
       padding: 10px 16px;
-      border-radius: 8px;
-      font-size: 0.95rem;
-      font-weight: 600;
+      border-radius: 14px;
+      font-size: 0.96rem;
+      font-weight: 700;
+      font-family: inherit;
       border: none;
       cursor: pointer;
-      transition: background-color 0.15s, transform 0.05s;
+      transition: background-color 0.15s, transform 0.08s;
     }
 
     .btn:active {
-      transform: translateY(1px);
+      transform: scale(0.98);
     }
 
     .btn-primary {
       width: 100%;
-      background-color: var(--primary);
+      background: linear-gradient(135deg, #ff9f1c 0%, #ff7b00 100%);
       color: #ffffff;
-      margin-top: 6px;
-      padding: 12px;
+      margin-top: 8px;
+      padding: 13px;
+      font-size: 1.02rem;
+      box-shadow: 0 4px 10px rgba(255, 123, 0, 0.25);
     }
 
     .btn-primary:hover {
-      background-color: var(--primary-hover);
+      background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%);
     }
 
     .btn-primary:disabled {
-      background-color: #94a3b8;
+      background: #cbd5e1;
+      box-shadow: none;
       cursor: not-allowed;
     }
 
     .btn-outline {
       background-color: #ffffff;
-      border: 1px solid #cbd5e1;
-      color: #334155;
-      padding: 7px 12px;
-      font-size: 0.85rem;
+      border: 2px solid #e5e7eb;
+      color: #4b5563;
+      padding: 8px 14px;
+      font-size: 0.86rem;
     }
 
     .btn-outline:hover {
-      background-color: #f1f5f9;
+      background-color: var(--primary-light);
+      border-color: var(--primary);
+      color: var(--primary-hover);
     }
 
     .btn-danger-sm {
       background-color: var(--danger-bg);
       color: var(--danger);
-      border: 1px solid #fecaca;
-      padding: 5px 10px;
-      font-size: 0.8rem;
-      border-radius: 6px;
+      border: 1.5px solid #fecaca;
+      padding: 5px 11px;
+      font-size: 0.82rem;
+      border-radius: 10px;
     }
 
     .btn-danger-sm:hover {
-      background-color: #fee2e2;
+      background-color: #fecaca;
     }
 
-    /* 주간 시간표 컨트롤 */
-    .timetable-controls {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      margin-bottom: 14px;
-      background: #f8fafc;
-      padding: 12px;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-    }
-
-    .timetable-program-select {
-      flex: 1 1 220px;
-      min-width: 180px;
-    }
-
-    .week-nav {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .week-label {
-      font-weight: 700;
-      font-size: 0.92rem;
-      color: #0f172a;
-      min-width: 170px;
-      text-align: center;
+    .timetable-subtitle {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      background: var(--secondary-light);
+      padding: 9px 12px;
+      border-radius: 12px;
+      color: #0369a1;
+      font-weight: 500;
     }
 
     .table-wrap {
       width: 100%;
       overflow-x: auto;
-      border: 1px solid var(--border);
-      border-radius: 10px;
+      border: 2px solid var(--border);
+      border-radius: 16px;
+      background: #ffffff;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      min-width: 560px;
+      min-width: 540px;
       font-size: 0.88rem;
     }
 
     th, td {
       border: 1px solid var(--border);
-      padding: 9px 6px;
+      padding: 10px 6px;
       text-align: center;
       vertical-align: middle;
     }
 
     thead th {
-      background-color: #f1f5f9;
+      background-color: #fff7ed;
       font-weight: 700;
-      color: #334155;
+      color: #9a3412;
+      font-size: 0.92rem;
     }
 
     .period-col {
-      width: 72px;
-      background-color: #f8fafc;
+      width: 74px;
+      background-color: #fffbeb;
       font-weight: 700;
-      color: #475569;
+      color: #b45309;
     }
 
     .cell-regular {
       background-color: var(--regular-bg);
-      color: #64748b;
+      color: #94a3b8;
       font-weight: 500;
     }
 
     .cell-empty {
       background-color: #ffffff;
-      color: #94a3b8;
+      color: #9ca3af;
       cursor: pointer;
-      transition: background-color 0.15s;
+      transition: background-color 0.15s, color 0.15s;
     }
 
     .cell-empty:hover {
       background-color: var(--primary-light);
-      color: var(--primary);
+      color: var(--primary-hover);
+      font-weight: 700;
     }
 
     .cell-booked {
       background-color: var(--success-bg);
       color: var(--success);
       font-weight: 700;
+      padding: 6px 4px;
+    }
+
+    .booked-item {
+      background: #ffffff;
+      border: 1.5px solid #86efac;
+      border-radius: 10px;
+      padding: 4px 6px;
+      margin-bottom: 4px;
+    }
+
+    .booked-item:last-child {
+      margin-bottom: 0;
     }
 
     .badge-booked {
       display: inline-block;
-      background-color: #10b981;
+      background-color: #22c55e;
       color: #ffffff;
-      font-size: 0.75rem;
-      padding: 2px 8px;
+      font-size: 0.74rem;
+      padding: 2px 7px;
       border-radius: 999px;
-      margin-bottom: 2px;
+      font-weight: 700;
     }
 
     .booked-sub {
       display: block;
-      font-size: 0.76rem;
-      color: #065f46;
+      font-size: 0.75rem;
+      color: #166534;
       font-weight: 500;
+      margin-top: 2px;
     }
 
     /* 검색 및 예약 목록 */
@@ -343,7 +361,7 @@
 
     .list-table th {
       white-space: nowrap;
-      padding: 10px 8px;
+      padding: 11px 8px;
     }
 
     .list-table td {
@@ -353,10 +371,20 @@
     .tag-program {
       display: inline-block;
       background: var(--primary-light);
-      color: var(--primary);
+      color: var(--primary-hover);
       font-weight: 700;
-      padding: 3px 8px;
-      border-radius: 6px;
+      padding: 3px 9px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+    }
+
+    .tag-day {
+      display: inline-block;
+      background: var(--secondary-light);
+      color: #0284c7;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 999px;
       font-size: 0.82rem;
     }
 
@@ -370,16 +398,16 @@
     /* 알림 토스트 */
     .toast {
       position: fixed;
-      bottom: 20px;
+      bottom: 22px;
       left: 50%;
       transform: translateX(-50%) translateY(100px);
-      background: #1e293b;
+      background: #374151;
       color: #ffffff;
-      padding: 12px 20px;
+      padding: 12px 22px;
       border-radius: 999px;
-      font-size: 0.9rem;
-      font-weight: 600;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      font-size: 0.92rem;
+      font-weight: 700;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
       z-index: 9999;
       opacity: 0;
       transition: transform 0.25s ease, opacity 0.25s ease;
@@ -401,11 +429,11 @@
     }
 
     .config-banner {
-      background: #fef2f2;
-      border: 1px solid #fecaca;
+      background: #fee2e2;
+      border: 2px solid #fca5a5;
       color: #991b1b;
       padding: 12px 16px;
-      border-radius: 10px;
+      border-radius: 14px;
       font-size: 0.88rem;
       display: none;
     }
@@ -415,8 +443,8 @@
   <header>
     <div class="header-inner">
       <div>
-        <h1>초등학교 방과후 수업 예약 시스템</h1>
-        <p>주간 시간표 확인 · 방과후(7~8교시) 신청 및 예약 현황 관리</p>
+        <h1>초등학교 방과후 수업 신청 시스템</h1>
+        <p>분기별 동일한 주간 시간표로 간편하게 방과후 수업을 신청해 보세요!</p>
       </div>
     </div>
   </header>
@@ -424,41 +452,41 @@
   <main class="container">
     <!-- Supabase 키 미설정 안내 -->
     <div id="configBanner" class="config-banner">
-      <strong>Supabase 연결 설정이 필요합니다:</strong> HTML 상단 스크립트의 <code>SUPABASE_URL</code>과 <code>SUPABASE_KEY</code> 값을 본인의 Supabase 프로젝트 값으로 입력해 주세요.
+      <strong>Supabase 연결 설정이 필요합니다:</strong> HTML 상단 스크립트의 <code>SUPABASE_URL</code>과 <code>SUPABASE_KEY</code> 값을 확인해 주세요.
     </div>
 
     <div class="top-grid">
       <!-- 왼쪽: 예약 등록 폼 -->
       <section class="card" aria-labelledby="formTitle">
-        <h2 class="card-title" id="formTitle">방과후 수업 예약 등록</h2>
+        <h2 class="card-title" id="formTitle">방과후 수업 신청하기</h2>
 
-        <div class="notice-box">
-          DB 개인정보 보호 정책(학생·학부모 개인정보 미저장)에 따라 DB에는 <strong>프로그램·날짜·교시·담당교사·학년·반</strong>만 저장되며, 입력한 학생·학부모 정보는 현재 브라우저 화면에만 임시 표시됩니다.
+        <div class="period-banner">
+          신청 가능 기한은 11/21~11/31까지 입니다.
         </div>
 
         <form id="bookingForm">
           <div class="form-group">
             <label for="programSelect" class="required">방과후 수업 선택</label>
             <select id="programSelect" required>
-              <option value="">프로그램을 불러오는 중...</option>
+              <option value="">-- 방과후 수업을 선택하세요 --</option>
             </select>
           </div>
 
           <div class="form-row">
             <div class="form-group">
-              <label for="applyDate" class="required">신청 날짜</label>
-              <input type="date" id="applyDate" required />
+              <label for="daySelect" class="required">수업 요일</label>
+              <select id="daySelect" required>
+                <option value="1">월요일</option>
+                <option value="2">화요일</option>
+                <option value="3">수요일</option>
+                <option value="4">목요일</option>
+                <option value="5">금요일</option>
+              </select>
             </div>
 
             <div class="form-group">
               <label for="periodSelect" class="required">교시 선택</label>
               <select id="periodSelect" required>
-                <option value="1" disabled>1교시 (정규수업)</option>
-                <option value="2" disabled>2교시 (정규수업)</option>
-                <option value="3" disabled>3교시 (정규수업)</option>
-                <option value="4" disabled>4교시 (정규수업)</option>
-                <option value="5" disabled>5교시 (정규수업)</option>
-                <option value="6" disabled>6교시 (정규수업)</option>
                 <option value="7" selected>7교시 (방과후 1부)</option>
                 <option value="8">8교시 (방과후 2부)</option>
               </select>
@@ -484,20 +512,32 @@
             </div>
 
             <div class="form-group">
-              <label for="teacherInput" class="required">담당 교사</label>
-              <input type="text" id="teacherInput" placeholder="예: 김선생" required />
+              <label for="teacherSelect" class="required">담당 교사</label>
+              <select id="teacherSelect" required>
+                <option value="">선생님 선택</option>
+                <option value="김민수 선생님">김민수 선생님</option>
+                <option value="이지은 선생님">이지은 선생님</option>
+                <option value="박준호 선생님">박준호 선생님</option>
+                <option value="최수빈 선생님">최수빈 선생님</option>
+                <option value="정다은 선생님">정다은 선생님</option>
+                <option value="강태윤 선생님">강태윤 선생님</option>
+                <option value="조서연 선생님">조서연 선생님</option>
+                <option value="윤하늘 선생님">윤하늘 선생님</option>
+                <option value="장현우 선생님">장현우 선생님</option>
+                <option value="한소라 선생님">한소라 선생님</option>
+              </select>
             </div>
           </div>
 
           <div class="form-row">
             <div class="form-group">
               <label for="studentNameInput">학생 이름</label>
-              <input type="text" id="studentNameInput" placeholder="예: 홍길동" />
+              <input type="text" id="studentNameInput" placeholder="예: 김하늘" />
             </div>
 
             <div class="form-group">
               <label for="parentNameInput">학부모 성함</label>
-              <input type="text" id="parentNameInput" placeholder="예: 홍판서" />
+              <input type="text" id="parentNameInput" placeholder="예: 김철수" />
             </div>
           </div>
 
@@ -506,36 +546,25 @@
             <input type="tel" id="parentPhoneInput" placeholder="예: 010-1234-5678" />
           </div>
 
-          <button type="submit" id="submitBtn" class="btn btn-primary">예약 등록하기</button>
+          <button type="submit" id="submitBtn" class="btn btn-primary">방과후 수업 신청하기</button>
         </form>
       </section>
 
-      <!-- 오른쪽: 주간 시간표 -->
+      <!-- 오른쪽: 분기 고정 주간 시간표 -->
       <section class="card" aria-labelledby="timetableTitle">
         <div class="card-title">
           <span id="timetableTitle">주간 방과후 시간표</span>
-          <span id="selectedLocationBadge" style="font-size:0.82rem; font-weight:600; color:#2563eb;"></span>
+          <span style="font-family:'Noto Sans KR',sans-serif; font-size:0.82rem; font-weight:700; color:#ff7b00; background:#fff3e6; padding:4px 10px; border-radius:999px;">분기 공통 시간표</span>
         </div>
 
-        <div class="timetable-controls">
-          <div class="timetable-program-select">
-            <select id="timetableProgramSelect" aria-label="시간표 조회 방과후 수업 선택">
-              <option value="">방과후 수업 선택</option>
-            </select>
-          </div>
-
-          <div class="week-nav">
-            <button type="button" id="prevWeekBtn" class="btn btn-outline">◀ 이전 주</button>
-            <span id="weekRangeLabel" class="week-label">0000.00.00 ~ 00.00</span>
-            <button type="button" id="nextWeekBtn" class="btn btn-outline">다음 주 ▶</button>
-            <button type="button" id="todayWeekBtn" class="btn btn-outline">이번 주</button>
-          </div>
-        </div>
+        <p class="timetable-subtitle">
+          분기 동안 매주 동일한 시간표로 운영됩니다. 빈 7·8교시 칸을 누르면 요일과 교시가 자동으로 선택돼요!
+        </p>
 
         <div class="table-wrap">
           <table>
             <thead>
-              <tr id="timetableHeadRow">
+              <tr>
                 <th class="period-col">교시</th>
                 <th>월</th>
                 <th>화</th>
@@ -545,21 +574,18 @@
               </tr>
             </thead>
             <tbody id="timetableBody">
-              <!-- JS로 1~8교시 렌더링 -->
+              <!-- JS로 1~8교시 즉시 렌더링 -->
             </tbody>
           </table>
         </div>
-        <p style="margin-top:8px; font-size:0.8rem; color:#64748b;">
-          * 빈 7·8교시 칸을 누르면 해당 날짜와 교시가 왼쪽 등록 폼에 자동으로 채워집니다.
-        </p>
       </section>
     </div>
 
     <!-- 하단: 전체 예약 목록 및 검색/취소 -->
     <section class="card" aria-labelledby="listTitle">
       <div class="card-title">
-        <span id="listTitle">예약 신청 내역 목록</span>
-        <span id="totalCountBadge" style="font-size:0.85rem; color:#64748b; font-weight:600;">총 0건</span>
+        <span id="listTitle">방과후 신청 내역 목록</span>
+        <span id="totalCountBadge" style="font-family:'Noto Sans KR',sans-serif; font-size:0.88rem; color:#6b7280; font-weight:700;">총 0건</span>
       </div>
 
       <div class="search-bar">
@@ -577,12 +603,12 @@
         <table class="list-table">
           <thead>
             <tr>
-              <th>신청 날짜</th>
+              <th>수업 요일</th>
               <th>교시</th>
               <th>방과후 수업 (장소)</th>
               <th>학년/반</th>
               <th>담당 교사</th>
-              <th>학생 / 학부모 (현재 세션)</th>
+              <th>학생 / 학부모 (현재 화면)</th>
               <th>관리</th>
             </tr>
           </thead>
@@ -600,39 +626,49 @@
 
   <script>
     // =========================================================================
-    // [설정 영역] 본인의 Supabase 프로젝트 URL과 Publishable(anon) Key를 붙여 넣으세요.
+    // [설정 영역] Supabase 프로젝트 URL과 Publishable Key
     // =========================================================================
     const SUPABASE_URL = "https://qmvsktmnizluzcrloujd.supabase.co";
     const SUPABASE_KEY = "sb_publishable_aQ7Vg_lNZ5N8kj5FpOBJkw_oX02aayz";
+
+    // DB의 apply_date(date 타입)와 주간 고정 요일(월~금)을 매핑하기 위한 기준 주간 날짜
+    const FIXED_DAY_TO_DATE = {
+      1: "2026-11-23", // 월요일
+      2: "2026-11-24", // 화요일
+      3: "2026-11-25", // 수요일
+      4: "2026-11-26", // 목요일
+      5: "2026-11-27"  // 금요일
+    };
+
+    const DAY_LABELS = {
+      1: "월요일",
+      2: "화요일",
+      3: "수요일",
+      4: "목요일",
+      5: "금요일"
+    };
 
     // 전역 상태 변수
     let supabaseClient = null;
     let programsList = [];
     let enrollmentsList = [];
-    let currentMonday = getMonday(new Date());
-    // DB에 개인정보 열이 없으므로 현재 브라우저 세션 동안만 ID별 학생/학부모 보조 표시용 맵 유지
     const sessionPrivateMeta = new Map();
 
     // DOM 요소 참조
     const configBanner = document.getElementById("configBanner");
     const bookingForm = document.getElementById("bookingForm");
     const programSelect = document.getElementById("programSelect");
-    const applyDateInput = document.getElementById("applyDate");
+    const daySelect = document.getElementById("daySelect");
     const periodSelect = document.getElementById("periodSelect");
     const gradeSelect = document.getElementById("gradeSelect");
     const classInput = document.getElementById("classInput");
-    const teacherInput = document.getElementById("teacherInput");
+    const teacherSelect = document.getElementById("teacherSelect");
     const studentNameInput = document.getElementById("studentNameInput");
     const parentNameInput = document.getElementById("parentNameInput");
     const parentPhoneInput = document.getElementById("parentPhoneInput");
     const submitBtn = document.getElementById("submitBtn");
 
-    const timetableProgramSelect = document.getElementById("timetableProgramSelect");
-    const selectedLocationBadge = document.getElementById("selectedLocationBadge");
-    const weekRangeLabel = document.getElementById("weekRangeLabel");
-    const timetableHeadRow = document.getElementById("timetableHeadRow");
     const timetableBody = document.getElementById("timetableBody");
-
     const searchInput = document.getElementById("searchInput");
     const enrollmentListBody = document.getElementById("enrollmentListBody");
     const totalCountBadge = document.getElementById("totalCountBadge");
@@ -649,37 +685,19 @@
       }, 3200);
     }
 
-    // 날짜 유틸리티 (로컬 시간 기준 YYYY-MM-DD)
-    function formatDateISO(date) {
-      const y = date.getFullYear();
-      const m = String(date.getMonth() + 1).padStart(2, "0");
-      const d = String(date.getDate()).padStart(2, "0");
-      return `${y}-${m}-${d}`;
-    }
-
-    function formatShortDate(date) {
-      const m = String(date.getMonth() + 1).padStart(2, "0");
-      const d = String(date.getDate()).padStart(2, "0");
-      return `${m}/${d}`;
-    }
-
-    function getMonday(date) {
-      const d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    // 날짜(YYYY-MM-DD)에서 요일 번호(1=월 ~ 5=금) 추출
+    function getDayIndexFromDateStr(dateStr) {
+      if (!dateStr) return 1;
+      const parts = dateStr.split("-").map(Number);
+      if (parts.length !== 3) return 1;
+      const d = new Date(parts[0], parts[1] - 1, parts[2]);
       const day = d.getDay(); // 0(일) ~ 6(토)
-      const diff = day === 0 ? -6 : 1 - day;
-      d.setDate(d.getDate() + diff);
-      return d;
+      return day >= 1 && day <= 5 ? day : 1;
     }
 
-    function addDays(date, days) {
-      const d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-      d.setDate(d.getDate() + days);
-      return d;
-    }
-
-    // 초기화
+    // 앱 초기화: 먼저 빈 1~8교시 시간표를 즉시 그려서 화면이 비어 보이지 않게 처리
     async function initApp() {
-      applyDateInput.value = formatDateISO(new Date());
+      renderTimetable();
 
       if (
         !SUPABASE_URL ||
@@ -688,9 +706,13 @@
         SUPABASE_KEY.includes("YOUR_SUPABASE")
       ) {
         configBanner.style.display = "block";
-        renderTimetable();
         enrollmentListBody.innerHTML =
           '<tr><td colspan="7" class="empty-state">상단 코드에 SUPABASE_URL과 SUPABASE_KEY를 입력하면 데이터가 표시됩니다.</td></tr>';
+        return;
+      }
+
+      if (!window.supabase) {
+        showToast("Supabase 라이브러리를 불러오지 못했습니다. 인터넷 연결을 확인해 주세요.", "error");
         return;
       }
 
@@ -717,36 +739,18 @@
 
       programsList = data || [];
 
-      // 등록 폼 셀렉트 & 주간 시간표 셀렉트 옵션 채우기
       const prevFormVal = programSelect.value;
-      const prevTableVal = timetableProgramSelect.value;
-
       programSelect.innerHTML = '<option value="">-- 방과후 수업을 선택하세요 --</option>';
-      timetableProgramSelect.innerHTML = "";
 
       programsList.forEach((prog) => {
         const label = prog.location ? `${prog.name} (${prog.location})` : prog.name;
-
-        const opt1 = document.createElement("option");
-        opt1.value = String(prog.id);
-        opt1.textContent = label;
-        programSelect.appendChild(opt1);
-
-        const opt2 = document.createElement("option");
-        opt2.value = String(prog.id);
-        opt2.textContent = label;
-        timetableProgramSelect.appendChild(opt2);
+        const opt = document.createElement("option");
+        opt.value = String(prog.id);
+        opt.textContent = label;
+        programSelect.appendChild(opt);
       });
 
       if (prevFormVal) programSelect.value = prevFormVal;
-      if (prevTableVal) {
-        timetableProgramSelect.value = prevTableVal;
-      } else if (programsList.length > 0) {
-        timetableProgramSelect.value = String(programsList[0].id);
-      }
-
-      updateSelectedLocationBadge();
-      renderTimetable();
     }
 
     // 2. 예약 내역 불러오기
@@ -761,7 +765,7 @@
 
       if (error) {
         console.error("예약 내역 조회 오류:", error);
-        showToast("예약 내역을 불러오지 못했습니다.", "error");
+        showToast("신청 내역을 불러오지 못했습니다.", "error");
         return;
       }
 
@@ -770,61 +774,44 @@
       renderEnrollmentList();
     }
 
-    function updateSelectedLocationBadge() {
-      const selectedId = Number(timetableProgramSelect.value);
-      const found = programsList.find((p) => p.id === selectedId);
-      selectedLocationBadge.textContent = found && found.location ? `장소: ${found.location}` : "";
-    }
-
-    // 3. 주간 시간표 렌더링 (월~금 × 1~8교시, 1~6교시는 '정규수업', 7~8교시는 신청 완료 표시)
+    // 3. 분기 고정 주간 시간표 렌더링 (월~금 × 1~8교시, 1~6교시는 '정규수업', 7~8교시는 신청 현황 표시)
     function renderTimetable() {
-      const dayNames = ["월", "화", "수", "목", "금"];
-      const weekDates = dayNames.map((_, idx) => addDays(currentMonday, idx));
-      const friday = weekDates[4];
-
-      weekRangeLabel.textContent = `${formatDateISO(currentMonday)} ~ ${formatShortDate(friday)}`;
-
-      // 헤더 날짜 업데이트
-      let headHtml = '<th class="period-col">교시</th>';
-      weekDates.forEach((d, idx) => {
-        headHtml += `<th>${dayNames[idx]} (${formatShortDate(d)})</th>`;
-      });
-      timetableHeadRow.innerHTML = headHtml;
-
-      const selectedProgramId = Number(timetableProgramSelect.value);
-      const weekDateStrs = weekDates.map((d) => formatDateISO(d));
-
       let bodyHtml = "";
+
       for (let period = 1; period <= 8; period++) {
         bodyHtml += "<tr>";
         bodyHtml += `<td class="period-col">${period}교시</td>`;
 
         if (period <= 6) {
-          // 1~6교시는 모두 '정규수업' 표시
-          for (let dIdx = 0; dIdx < 5; dIdx++) {
+          for (let dayIdx = 1; dayIdx <= 5; dayIdx++) {
             bodyHtml += `<td class="cell-regular">정규수업</td>`;
           }
         } else {
-          // 7~8교시 방과후 신청 상태 표시
-          for (let dIdx = 0; dIdx < 5; dIdx++) {
-            const dateStr = weekDateStrs[dIdx];
-            const matched = enrollmentsList.find(
+          for (let dayIdx = 1; dayIdx <= 5; dayIdx++) {
+            const matchedList = enrollmentsList.filter(
               (item) =>
-                Number(item.program_id) === selectedProgramId &&
-                item.apply_date === dateStr &&
+                getDayIndexFromDateStr(item.apply_date) === dayIdx &&
                 Number(item.period) === period
             );
 
-            if (matched) {
-              bodyHtml += `
-                <td class="cell-booked">
-                  <span class="badge-booked">신청 완료</span>
-                  <span class="booked-sub">${matched.grade}학년 ${escapeHtml(matched.class_name)} · ${escapeHtml(matched.teacher_name)}</span>
-                </td>
-              `;
+            if (matchedList.length > 0) {
+              const itemsHtml = matchedList
+                .map((m) => {
+                  const progObj = m.programs || programsList.find((p) => p.id === m.program_id);
+                  const progName = progObj ? progObj.name : "방과후수업";
+                  return `
+                    <div class="booked-item">
+                      <span class="badge-booked">${escapeHtml(progName)}</span>
+                      <span class="booked-sub">${m.grade}학년 ${escapeHtml(m.class_name)} · ${escapeHtml(m.teacher_name)}</span>
+                    </div>
+                  `;
+                })
+                .join("");
+
+              bodyHtml += `<td class="cell-booked">${itemsHtml}</td>`;
             } else {
               bodyHtml += `
-                <td class="cell-empty" data-date="${dateStr}" data-period="${period}" title="클릭하여 이 날짜·교시 선택">
+                <td class="cell-empty" data-day="${dayIdx}" data-period="${period}" title="클릭하여 ${DAY_LABELS[dayIdx]} ${period}교시 선택">
                   신청 가능
                 </td>
               `;
@@ -838,20 +825,17 @@
       timetableBody.innerHTML = bodyHtml;
     }
 
-    // 빈 시간표 셀 클릭 시 등록 폼에 자동 반영
+    // 빈 시간표 셀 클릭 시 등록 폼에 요일·교시 자동 반영
     timetableBody.addEventListener("click", (e) => {
       const cell = e.target.closest(".cell-empty");
       if (!cell) return;
 
-      const dateVal = cell.dataset.date;
+      const dayVal = cell.dataset.day;
       const periodVal = cell.dataset.period;
-      if (timetableProgramSelect.value) {
-        programSelect.value = timetableProgramSelect.value;
-      }
-      if (dateVal) applyDateInput.value = dateVal;
+      if (dayVal) daySelect.value = dayVal;
       if (periodVal) periodSelect.value = periodVal;
 
-      showToast(`${dateVal} ${periodVal}교시가 선택되었습니다.`);
+      showToast(`${DAY_LABELS[dayVal]} ${periodVal}교시가 선택되었습니다.`);
       bookingForm.scrollIntoView({ behavior: "smooth", block: "nearest" });
     });
 
@@ -870,7 +854,7 @@
 
       if (filtered.length === 0) {
         enrollmentListBody.innerHTML =
-          '<tr><td colspan="7" class="empty-state">조건에 해당하는 방과후 예약 내역이 없습니다.</td></tr>';
+          '<tr><td colspan="7" class="empty-state">조건에 해당하는 방과후 신청 내역이 없습니다.</td></tr>';
         return;
       }
 
@@ -879,6 +863,8 @@
           const progObj = item.programs || programsList.find((p) => p.id === item.program_id);
           const progName = progObj ? progObj.name : `프로그램 #${item.program_id}`;
           const locationText = progObj && progObj.location ? ` (${progObj.location})` : "";
+          const dayIdx = getDayIndexFromDateStr(item.apply_date);
+          const dayText = DAY_LABELS[dayIdx] || "월요일";
 
           const meta = sessionPrivateMeta.get(item.id);
           const metaText = meta
@@ -887,12 +873,12 @@
 
           return `
             <tr>
-              <td>${escapeHtml(item.apply_date)}</td>
+              <td><span class="tag-day">${escapeHtml(dayText)}</span></td>
               <td><strong>${item.period}교시</strong></td>
               <td><span class="tag-program">${escapeHtml(progName)}</span>${escapeHtml(locationText)}</td>
               <td>${item.grade}학년 ${escapeHtml(item.class_name)}</td>
               <td>${escapeHtml(item.teacher_name)}</td>
-              <td style="font-size:0.82rem; color:#475569;">${escapeHtml(metaText)}</td>
+              <td style="font-size:0.82rem; color:#4b5563;">${escapeHtml(metaText)}</td>
               <td>
                 <button type="button" class="btn btn-danger-sm" data-delete-id="${item.id}">취소</button>
               </td>
@@ -906,35 +892,35 @@
     bookingForm.addEventListener("submit", async (e) => {
       e.preventDefault();
       if (!supabaseClient) {
-        showToast("Supabase 설정을 먼저 완료해 주세요.", "error");
+        showToast("Supabase 설정을 먼저 확인해 주세요.", "error");
         return;
       }
 
       const programId = Number(programSelect.value);
-      const applyDate = applyDateInput.value;
+      const dayIdx = Number(daySelect.value);
+      const applyDate = FIXED_DAY_TO_DATE[dayIdx] || "2026-11-23";
       const period = Number(periodSelect.value);
       const grade = Number(gradeSelect.value);
       const className = classInput.value.trim();
-      const teacherName = teacherInput.value.trim();
+      const teacherName = teacherSelect.value;
 
       const studentName = studentNameInput.value.trim();
       const parentName = parentNameInput.value.trim();
       const parentPhone = parentPhoneInput.value.trim();
 
-      if (!programId || !applyDate || !className || !teacherName) {
-        showToast("필수 항목을 모두 입력해 주세요.", "error");
+      if (!programId || !dayIdx || !className || !teacherName) {
+        showToast("필수 항목을 모두 선택·입력해 주세요.", "error");
         return;
       }
 
       if (period < 7 || period > 8) {
-        showToast("방과후 수업은 7교시 또는 8교시만 예약할 수 있습니다.", "error");
+        showToast("방과후 수업은 7교시 또는 8교시만 신청할 수 있습니다.", "error");
         return;
       }
 
       submitBtn.disabled = true;
-      submitBtn.textContent = "등록 중...";
+      submitBtn.textContent = "신청 중...";
 
-      // DB 스키마(enrollments)에 정의된 열만 전송 (개인정보 열 제외)
       const { data, error } = await supabaseClient
         .from("enrollments")
         .insert([
@@ -951,11 +937,10 @@
         .single();
 
       submitBtn.disabled = false;
-      submitBtn.textContent = "예약 등록하기";
+      submitBtn.textContent = "방과후 수업 신청하기";
 
       if (error) {
         console.error("예약 저장 오류:", error);
-        // 고유 제약 조건(23505) 중복 오류 처리
         if (error.code === "23505") {
           alert("이미 예약된 수업입니다");
           showToast("이미 예약된 수업입니다.", "error");
@@ -966,7 +951,6 @@
         return;
       }
 
-      // 세션 메모리용 학생/학부모 보조 메모 저장
       if (data && data.id && (studentName || parentName || parentPhone)) {
         sessionPrivateMeta.set(data.id, {
           studentName,
@@ -975,16 +959,11 @@
         });
       }
 
-      // 시간표도 방금 신청한 수업과 해당 주로 이동해 바로 확인 가능하도록 동기화
-      timetableProgramSelect.value = String(programId);
-      updateSelectedLocationBadge();
-      currentMonday = getMonday(new Date(applyDate + "T00:00:00"));
-
       studentNameInput.value = "";
       parentNameInput.value = "";
       parentPhoneInput.value = "";
 
-      showToast("방과후 수업 예약이 등록되었습니다.", "success");
+      showToast("방과후 수업 신청이 완료되었습니다!", "success");
       await loadEnrollments();
     });
 
@@ -996,9 +975,10 @@
       const deleteId = Number(btn.dataset.deleteId);
       const target = enrollmentsList.find((item) => item.id === deleteId);
       const progObj = target?.programs || programsList.find((p) => p.id === target?.program_id);
+      const dayText = target ? DAY_LABELS[getDayIndexFromDateStr(target.apply_date)] : "";
       const confirmMsg = target
-        ? `[${target.apply_date} ${target.period}교시] ${progObj?.name || ""} (${target.grade}학년 ${target.class_name}) 예약을 취소하시겠습니까?`
-        : "선택한 방과후 수업 예약을 취소하시겠습니까?";
+        ? `[${dayText} ${target.period}교시] ${progObj?.name || ""} (${target.grade}학년 ${target.class_name}) 신청을 취소하시겠습니까?`
+        : "선택한 방과후 수업 신청을 취소하시겠습니까?";
 
       if (!window.confirm(confirmMsg)) return;
 
@@ -1014,31 +994,11 @@
       }
 
       sessionPrivateMeta.delete(deleteId);
-      showToast("예약이 취소되었습니다.", "success");
+      showToast("신청이 취소되었습니다.", "success");
       await loadEnrollments();
     });
 
     // 이벤트 바인딩
-    timetableProgramSelect.addEventListener("change", () => {
-      updateSelectedLocationBadge();
-      renderTimetable();
-    });
-
-    document.getElementById("prevWeekBtn").addEventListener("click", () => {
-      currentMonday = addDays(currentMonday, -7);
-      renderTimetable();
-    });
-
-    document.getElementById("nextWeekBtn").addEventListener("click", () => {
-      currentMonday = addDays(currentMonday, 7);
-      renderTimetable();
-    });
-
-    document.getElementById("todayWeekBtn").addEventListener("click", () => {
-      currentMonday = getMonday(new Date());
-      renderTimetable();
-    });
-
     searchInput.addEventListener("input", () => {
       renderEnrollmentList();
     });
@@ -1051,7 +1011,7 @@
     document.getElementById("refreshBtn").addEventListener("click", async () => {
       await loadPrograms();
       await loadEnrollments();
-      showToast("최신 예약 현황을 불러왔습니다.");
+      showToast("최신 신청 현황을 불러왔습니다.");
     });
 
     // XSS 방지용 이스케이프 함수
